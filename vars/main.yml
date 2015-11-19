@@ -1,0 +1,7 @@
+---
+# vars file for bacula
+bacula_server_director_name: hardy-dir
+bacula_fd_port: 9102
+bacula_fd_max_concurrent_jobs: 20
+bacula_fd_address: ansible_fqdn
+# bacula_fd_address: 0.0.0.0

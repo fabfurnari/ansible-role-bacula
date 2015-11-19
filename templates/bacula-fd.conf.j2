@@ -1,0 +1,59 @@
+# {{ ansible_managed }}
+
+#
+# List Directors who are permitted to contact this File daemon
+#
+Director {
+  Name = {{ bacula_director_name }}
+  Password = "{{ bacula_director_password }}"
+  {% if bacula_use_tls -%}
+  TLS Enable = yes
+  {% if bacula_tls_required -%}
+  TLS Require = yes
+  {% else -%}
+  TLS Require = no
+  {% endif %}
+  TLS Certificate = {{ bacula_cert_dir }}/{{ ansible_hostname }}.crt
+  TLS CA Certificate File = {{ bacula_cert_dir }}/{{ bacula_rootca_name }}
+  TLS Key = {{ bacula_cert_dir }}/{{ ansible_hostname }}.key
+  {% endif %}
+}
+
+#
+# Restricted Director, used by tray-monitor to get the
+#   status of the file daemon
+#
+Director {
+  Name = {{ ansible_hostname }}-mon
+  Password = "{{ bacula_restricted_director_password }}"
+  Monitor = yes
+}
+
+#
+# "Global" File daemon configuration specifications
+#
+FileDaemon {                          # this is me
+  Name = {{ ansible_hostname }}-fd
+  FDport = {{ bacula_fd_port }}      # where we listen for the director
+  WorkingDirectory = {{ bacula_fd_working_dir }}
+  Pid Directory = /var/run/bacula
+  Maximum Concurrent Jobs = {{ bacula_fd_max_concurrent_jobs }}
+  FDAddress = {{ bacula_fd_address }}
+  {% if bacula_use_tls -%}
+  TLS Enable = yes
+  {% if bacula_tls_required -%}
+  TLS Require = yes
+  {% else -%}
+  TLS Require = no
+  {% endif %}
+  TLS Certificate = {{ bacula_cert_dir }}/{{ ansible_hostname }}.crt
+  TLS CA Certificate File = {{ bacula_cert_dir }}/{{ bacula_rootca_name }}
+  TLS Key = {{ bacula_cert_dir }}/{{ ansible_hostname }}.key
+  {% endif %}
+}
+
+# Send all messages except skipped files back to Director
+Messages {
+  Name = Standard
+  director = {{ bacula_server_director_name }} = all, !skipped, !restored
+}

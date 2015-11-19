@@ -1,0 +1,8 @@
+---
+# tasks file for bacula
+
+- include: bacula-client.yml
+  when: bacula_role == 'client'
+
+- include: bacula-server.yml
+  when: bacula_role == 'server'

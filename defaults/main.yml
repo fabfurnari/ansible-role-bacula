@@ -4,3 +4,16 @@
 # Default option is to install client
 # this can be overridden at various levels
 bacula_role: client
+
+# Switch to use or not TLS
+bacula_use_tls: False
+
+bacula_client_package: bacula-client
+bacula_user: bacula
+bacula_group: bacula
+bacula_conf_dir: /etc/bacula
+bacula_cert_dir: /etc/bacula/ssl
+bacula_rootca_name: rootca.crt
+
+bacula_fd_port: 9102
+bacula_fd_working_dir: /var/lib/bacula

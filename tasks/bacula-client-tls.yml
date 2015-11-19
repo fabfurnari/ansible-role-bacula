@@ -1,0 +1,33 @@
+---
+# Cert key stored as ansible vault (strongly suggested)
+
+- include_vars: {{ ansible_hostname }}_key.yml
+- name: create ssl folder
+  file: path={{ bacula_cert_dir }}
+        state=directory
+        mode=0600
+        owner={{ bacula_user }}
+        group={{ bacula_group }}
+
+- name: copy certificate
+  copy: src={{ ansible_hostname }}.crt
+        dest={{ bacula_cert_dir }}/{{ ansible_hostname }}.crt
+        owner={{ bacula_user }}
+        group={{ bacula_group }}
+        mode=0600
+
+- name: copy key
+  copy: content={{ bacula_tls_key }}
+        dest={{ bacula_cert_dir }}/{{ ansible_hostname }}.key
+        owner={{ bacula_user }}
+        group={{ bacula_group }}
+        mode=0600
+  no_log: True
+  
+- name: copy root CA cert
+  copy: src={{ bacula_rootca_name }}
+        dest={{ bacula_cert_dir }}/{{ bacula_rootca_name }}
+        owner={{ bacula_user }}
+        group={{ bacula_group }}
+        mode=0600
+

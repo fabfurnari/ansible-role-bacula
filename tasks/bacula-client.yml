@@ -1,0 +1,18 @@
+---
+# Installs bacula client stuff
+
+- name: install bacula package
+  apt: name={{ bacula_client_package }} state=present update_cache=yes
+
+- include: bacula-client-tls.yml
+  when: bacula_use_tls
+
+- name: copy fd configuration file
+  template: src=bacula-fd.conf.j2
+            dest={{ bacula_conf_dir }}/bacula-fd.conf
+            owner={{ bacula_user }}
+            group={{ bacula_group }}
+            mode=0640
+            validate='bacula-fd %s'
+  notify: bacula restart
+
