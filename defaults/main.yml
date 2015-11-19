@@ -1,0 +1,6 @@
+---
+# defaults file for bacula
+
+# Default option is to install client
+# this can be overridden at various levels
+bacula_role: client
